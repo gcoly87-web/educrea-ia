@@ -1,0 +1,31 @@
+EDUCRÉA IA — PROTOTYPE GRATUIT
+================================
+
+CONTENU
+- index.html : application de démonstration
+- manifest.webmanifest : configuration installable
+- sw.js : cache hors ligne après la première visite sur un hébergement HTTPS
+
+TESTER SUR ORDINATEUR
+1. Décompresser le ZIP.
+2. Ouvrir index.html dans un navigateur.
+3. Tester les classes CI, CP, CE1, CE2, CM1, CM2 et les trois ateliers.
+
+IMPORTANT SUR LE MODE HORS LIGNE
+- Le fichier HTML seul fonctionne localement pour les exercices intégrés.
+- Le mode application installable et le cache hors ligne du service worker nécessitent un hébergement HTTPS et une première visite avec Internet.
+- Les résultats sont stockés dans le navigateur de cet appareil. Ils ne sont pas synchronisés entre appareils.
+- La fonction vocale utilise la synthèse vocale du navigateur et peut ne pas être disponible sur tous les téléphones.
+- Les exercices sont une maquette illustrative, pas encore un programme complet validé selon les référentiels sénégalais.
+
+PUBLIER GRATUITEMENT
+Option simple : GitHub Pages.
+1. Créer un compte sur github.com.
+2. Créer un dépôt public nommé educrea-ia.
+3. Téléverser index.html, manifest.webmanifest et sw.js à la racine du dépôt.
+4. Dans Settings > Pages, choisir la branche principale et le dossier racine.
+5. Activer Pages, puis ouvrir le lien HTTPS généré par GitHub.
+6. Visiter une première fois le lien avec Internet. Le cache hors ligne peut ensuite fonctionner dans le navigateur compatible.
+
+AVANT UNE UTILISATION EN CLASSE
+Faire vérifier les contenus par des enseignants, ajouter des exercices par compétence, vérifier les corrigés et tester sur plusieurs téléphones Android. Ne collecter aucune donnée personnelle d'enfant dans cette première version.

@@ -1,0 +1,10 @@
+{
+  "name": "EduCréa IA — Lire et écrire",
+  "short_name": "EduCréa IA",
+  "description": "Atelier de lecture et d'écriture du CI au CM2",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#f5f8fb",
+  "theme_color": "#174a72",
+  "lang": "fr"
+}

@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#174a72">
+<meta name="description" content="EduCréa IA : apprendre à lire et écrire du CI au CM2.">
+<link rel="manifest" href="manifest.webmanifest">
+<title>EduCréa IA — Lire et écrire</title>
+<style>
+:root{--blue:#174a72;--sky:#eaf4fb;--gold:#f5c451;--ink:#172b3a;--muted:#536776;--green:#176b48;--line:#d6e2ea}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#f5f8fb;color:var(--ink);line-height:1.5}
+header{background:var(--blue);color:white;padding:22px 16px 26px} .wrap{max-width:900px;margin:auto}
+.brand{display:flex;align-items:center;gap:12px}.logo{font-size:32px;background:#fff;color:var(--blue);border-radius:14px;padding:7px 12px}
+h1{font-size:clamp(1.55rem,4vw,2.3rem);margin:0}header p{margin:8px 0 0;color:#e4f1fa}
+main{padding:18px 14px 50px}.panel{background:white;border:1px solid var(--line);border-radius:18px;padding:18px;margin:0 0 16px;box-shadow:0 3px 14px #1233}
+h2{font-size:1.2rem;margin:0 0 12px}.sub{color:var(--muted);margin-top:-5px}
+select,button,input{font:inherit}select{width:100%;padding:12px;border:1px solid #9fb7c7;border-radius:10px;background:white}
+.levels{display:grid;grid-template-columns:repeat(6,1fr);gap:7px;margin:12px 0}
+.level{padding:10px 3px;border:1px solid var(--line);border-radius:10px;background:#fff;font-weight:700;color:var(--blue);cursor:pointer}
+.level.active{background:var(--blue);color:white;border-color:var(--blue)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}.tab{border:1px solid var(--line);border-radius:999px;background:white;padding:9px 13px;cursor:pointer}.tab.active{background:var(--sky);border-color:var(--blue);font-weight:700}
+.lesson{background:#f7fbff;border:1px solid var(--line);padding:16px;border-radius:14px;margin-top:12px}
+.big{font-size:clamp(2rem,8vw,3.2rem);font-weight:800;letter-spacing:2px;text-align:center;color:var(--blue);margin:10px}
+.choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:9px;margin:14px 0}
+.choice{border:2px solid var(--line);border-radius:12px;background:white;padding:12px;cursor:pointer;font-weight:650}.choice:hover{border-color:var(--blue)}
+.primary{background:var(--blue);color:white;border:0;border-radius:11px;padding:12px 16px;cursor:pointer;font-weight:700}.secondary{background:white;color:var(--blue);border:1px solid var(--blue);border-radius:11px;padding:10px 14px;cursor:pointer}
+.feedback{min-height:28px;font-weight:700;margin:10px 0}.good{color:var(--green)}.bad{color:#a33a30}
+.progress{height:12px;background:#e6edf2;border-radius:99px;overflow:hidden}.bar{height:100%;width:0;background:#27875e;transition:width .2s}
+footer{text-align:center;color:var(--muted);font-size:.9rem;padding:20px}
+.small{font-size:.9rem;color:var(--muted)}.hidden{display:none}
+@media(max-width:520px){.levels{grid-template-columns:repeat(3,1fr)}.panel{padding:14px}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<div class="brand"><div class="logo">📚</div><div><h1>EduCréa IA</h1><div>Lire, écrire et réussir — du CI au CM2</div></div></div>
+<p>Un petit atelier de lecture pour les élèves, les familles et les enseignants.</p>
+</div></header>
+<main class="wrap">
+<section class="panel">
+<h2>👋 Bienvenue dans ton atelier</h2>
+<p class="sub">Choisis ta classe et entraîne-toi à ton rythme. Cette démonstration fonctionne sans compte.</p>
+<div class="levels" id="levels">
+<button class="level active" data-level="CI">CI</button><button class="level" data-level="CP">CP</button><button class="level" data-level="CE1">CE1</button><button class="level" data-level="CE2">CE2</button><button class="level" data-level="CM1">CM1</button><button class="level" data-level="CM2">CM2</button>
+</div>
+<label for="profile"><strong>Je suis :</strong></label>
+<select id="profile"><option>Élève</option><option>Parent</option><option>Enseignant</option></select>
+</section>
+<section class="panel">
+<h2 id="activityTitle">🔤 Reconnaître les lettres</h2>
+<div class="tabs" role="tablist">
+<button class="tab active" data-mode="read">Lecture</button><button class="tab" data-mode="write">Écriture</button><button class="tab" data-mode="understand">Compréhension</button>
+</div>
+<div class="lesson">
+<div class="small" id="instruction">Écoute le son si quelqu'un peut te le lire, puis choisis la bonne lettre.</div>
+<div class="big" id="prompt">Quel mot commence par B ?</div>
+<div class="choices" id="choices"></div>
+<div id="feedback" class="feedback" aria-live="polite"></div>
+<button class="primary" id="next">Exercice suivant →</button>
+<button class="secondary" id="speak">🔊 Lire la consigne</button>
+</div>
+</section>
+<section class="panel">
+<h2>⭐ Mes progrès sur cet appareil</h2>
+<div style="display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap"><span>Réponses justes</span><strong id="score">0 / 0</strong></div>
+<div class="progress" aria-label="Progression"><div class="bar" id="bar"></div></div>
+<p class="small" id="progressText">Fais un exercice pour commencer. Les progrès sont conservés sur cet appareil uniquement.</p>
+<button class="secondary" id="reset">Remettre les progrès à zéro</button>
+</section>
+<section class="panel">
+<h2>👨‍👩‍👧 Espace parents et enseignants</h2>
+<ul>
+<li>Faire lire la consigne à voix haute et laisser l'enfant réfléchir.</li>
+<li>Encourager les essais, puis expliquer la correction.</li>
+<li>Prévoir 10 à 15 minutes d'entraînement régulier.</li>
+<li>Pour l'enseignant : utiliser les activités comme support, après vérification du niveau de l'élève.</li>
+</ul>
+<p class="small"><strong>À noter :</strong> cette maquette contient des exercices de démonstration. Elle ne remplace pas encore une progression complète validée par des enseignants sénégalais.</p>
+</section>
+</main>
+<footer>EduCréa IA • Prototype éducatif gratuit • Version de démonstration</footer>
+<script>
+const bank = {
+ CI:{read:[{q:"Quel mot commence par B ?",a:["Banane","Soleil","Mouton"],correct:0,why:"Banane commence par la lettre B."},{q:"Choisis la lettre A.",a:["O","A","I"],correct:1,why:"Voici la lettre A."}],write:[{q:"Quelle lettre entends-tu au début de « maman » ?",a:["M","P","L"],correct:0,why:"Maman commence par M."}],understand:[{q:"Quel animal fait « miaou » ?",a:["Le chat","Le chien","La vache"],correct:0,why:"Le chat fait miaou."}]},
+ CP:{read:[{q:"Complète : ma _ son",a:["i","a","o"],correct:0,why:"On écrit maison avec i."},{q:"Lis le mot : vélo. Combien de syllabes ?",a:["1","2","3"],correct:1,why:"Vé-lo : deux syllabes."}],write:[{q:"Quel mot est correctement écrit ?",a:["école","écolle","écaule"],correct:0,why:"Le mot s'écrit école."}],understand:[{q:"Awa boit de l'eau. Que boit Awa ?",a:["Du lait","De l'eau","Du jus"],correct:1,why:"La phrase dit qu'Awa boit de l'eau."}]},
+ CE1:{read:[{q:"Le chat dort sur le …",a:["lit","lire","vite"],correct:0,why:"Le chat dort sur le lit."}],write:[{q:"Choisis le mot correctement écrit.",a:["cheval","chevale","chevaule"],correct:0,why:"On écrit cheval."}],understand:[{q:"« Ali court dans la cour. » Qui court ?",a:["Awa","Ali","Le maître"],correct:1,why:"C'est Ali qui court."}]},
+ CE2:{read:[{q:"Dans « Awa lit un livre », que fait Awa ?",a:["Elle lit","Elle court","Elle chante"],correct:0,why:"Awa lit un livre."}],write:[{q:"Complète : Les élèves … en classe.",a:["travaille","travaillent","travailles"],correct:1,why:"« Les élèves » est au pluriel : travaillent."}],understand:[{q:"« Il pleut, donc Moussa ouvre son parapluie. » Pourquoi ouvre-t-il son parapluie ?",a:["Parce qu'il pleut","Pour dormir","Pour écrire"],correct:0,why:"Le mot « donc » relie la pluie à l'action."}]},
+ CM1:{read:[{q:"Choisis le synonyme de « heureux ».",a:["Content","Fatigué","Fâché"],correct:0,why:"Heureux signifie content."}],write:[{q:"Complète : Les enfants … dans la cour.",a:["joue","jouent","joues"],correct:1,why:"Le sujet « les enfants » est au pluriel : jouent."}],understand:[{q:"Un texte raconte les événements dans l'ordre. Comment appelle-t-on souvent ce type de texte ?",a:["Récit","Liste de courses","Dictionnaire"],correct:0,why:"Un récit rapporte des événements."}]},
+ CM2:{read:[{q:"Quel mot signifie presque la même chose que « courageux » ?",a:["Brave","Timide","Lent"],correct:0,why:"Brave est un synonyme de courageux."}],write:[{q:"Choisis la phrase correctement ponctuée.",a:["Où vas-tu ?","Où vas-tu.","Où vas-tu !?"],correct:0,why:"Une question directe se termine par un point d'interrogation."}],understand:[{q:"Dans un texte argumentatif, à quoi sert un argument ?",a:["À justifier une idée","À décorer la page","À remplacer le titre"],correct:0,why:"Un argument apporte une raison pour soutenir une idée."}]}
+};
+let level="CI", mode="read", idx=0, current=null, correct=0, total=0;
+try{correct=Number(localStorage.getItem("ec_correct")||0);total=Number(localStorage.getItem("ec_total")||0)}catch(e){}
+const $=id=>document.getElementById(id);
+function getList(){return bank[level][mode]}
+function render(){
+ const list=getList(); idx=idx%list.length; current=list[idx];
+ $("activityTitle").textContent=({read:"🔤 Atelier de lecture",write:"✏️ Atelier d’écriture",understand:"💡 Atelier de compréhension"})[mode];
+ $("instruction").textContent=mode==="read"?"Lis la question et choisis la bonne réponse.":mode==="write"?"Observe les mots et choisis la bonne écriture.":"Lis attentivement puis réponds à la question.";
+ $("prompt").textContent=current.q;$("feedback").textContent="";$("feedback").className="feedback";
+ $("choices").innerHTML="";
+ current.a.forEach((choice,i)=>{const b=document.createElement("button");b.className="choice";b.textContent=choice;b.onclick=()=>answer(i,b);$("choices").appendChild(b)});
+ updateScore();
+}
+function answer(i,btn){
+ if($("feedback").dataset.done==="yes")return;
+ $("feedback").dataset.done="yes";total++;if(i===current.correct){correct++;$("feedback").textContent="Bravo ! "+current.why;$("feedback").className="feedback good"}else{$("feedback").textContent="Essaie encore. "+current.why;$("feedback").className="feedback bad"}
+ try{localStorage.setItem("ec_correct",correct);localStorage.setItem("ec_total",total)}catch(e){}
+ $("choices").querySelectorAll("button").forEach(b=>b.disabled=true);updateScore();
+}
+function updateScore(){$("score").textContent=correct+" / "+total;$("bar").style.width=(total?Math.round(correct/total*100):0)+"%";$("progressText").textContent=total?"Réussite : "+Math.round(correct/total*100)+" %. Continue à t'entraîner !":"Fais un exercice pour commencer."}
+document.querySelectorAll("[data-level]").forEach(b=>b.onclick=()=>{level=b.dataset.level;document.querySelectorAll("[data-level]").forEach(x=>x.classList.toggle("active",x===b));idx=0;render()});
+document.querySelectorAll("[data-mode]").forEach(b=>b.onclick=()=>{mode=b.dataset.mode;document.querySelectorAll("[data-mode]").forEach(x=>x.classList.toggle("active",x===b));idx=0;render()});
+$("next").onclick=()=>{idx++;$("feedback").dataset.done="";render()};
+$("speak").onclick=()=>{if("speechSynthesis"in window){speechSynthesis.cancel();speechSynthesis.speak(new SpeechSynthesisUtterance($("instruction").textContent+" "+current.q))}else alert("La lecture audio n'est pas disponible sur cet appareil.")};
+$("reset").onclick=()=>{if(confirm("Effacer les progrès enregistrés sur cet appareil ?")){correct=0;total=0;try{localStorage.removeItem("ec_correct");localStorage.removeItem("ec_total")}catch(e){}render()}};
+if("serviceWorker"in navigator && location.protocol.startsWith("http")){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js").catch(()=>{}))}
+render();
+</script>
+</body></html>
